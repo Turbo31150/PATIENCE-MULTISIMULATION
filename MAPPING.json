@@ -1,0 +1,38 @@
+{
+  "MAPPING_INDEX": {
+    "version": "1.0",
+    "date": "2025-11-27",
+    "description": "Index avec balises pour acces direct - Raccourcis logiques pour IA et automatisation",
+    
+    "BALISES_ACCES_DIRECT": {
+      "@GPU": {"chemin": "GPU_STRATEGY_ENGINE.json", "section": "ALGORITHME_UNIVERSEL"},
+      "@F1": {"chemin": "GPU_STRATEGY_ENGINE.json", "section": "F1_SCAN"},
+      "@F2": {"chemin": "GPU_STRATEGY_ENGINE.json", "section": "F2_BOUCLE"},
+      "@F3": {"chemin": "GPU_STRATEGY_ENGINE.json", "section": "F3_PIPELINE"},
+      "@F4": {"chemin": "GPU_STRATEGY_ENGINE.json", "section": "F4_GPU"},
+      "@FILTRES": {"chemin": "GPU_STRATEGY_ENGINE.json", "section": "SYSTEME_FILTRES_DIVISION"},
+      "@TRADING": {"chemin": "GPU_STRATEGY_ENGINE.json", "section": "EXEMPLE_TRADING_CONVERTI"},
+      "@UNIVERSEL": {"chemin": "GPU_STRATEGY_ENGINE.json", "section": "APPLICATION_UNIVERSELLE"},
+      "@EVOLUTION": {"chemin": "GPU_STRATEGY_ENGINE.json", "section": "AUTO_EVOLUTION"}
+    },
+    
+    "RACCOURCIS_COMPILATION": {
+      "PIPELINE_TEXTE": "@F1 -> @FILTRES -> @F4 -> OUTPUT",
+      "TRADING_RAPIDE": "@TRADING -> @FILTRES -> DECISION",
+      "MULTI_DOMAINE": "@UNIVERSEL -> SELECT_DOMAINE -> @F3 -> EXEC"
+    },
+    
+    "USAGE_IA": {
+      "exemple": "Pour acceder a F1_SCAN, utiliser @F1",
+      "compilation": "Lire @GPU puis appliquer @FILTRES",
+      "automatisation": "Detecter balise -> Charger section -> Executer"
+    },
+    
+    "FICHIERS_PROJET": [
+      {"nom": "MAPPING.json", "role": "Index et raccourcis"},
+      {"nom": "GPU_STRATEGY_ENGINE.json", "role": "Algorithmes universels"},
+      {"nom": "README.md", "role": "Documentation"}
+    ]
+  },
+  "CONFIG": {"copier_coller": true, "lecture_ia": "immediate", "balises_actives": true}
+}
