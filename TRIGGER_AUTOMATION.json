@@ -1,0 +1,94 @@
+{
+  "TRIGGER_AUTOMATION": {
+    "version": "1.0",
+    "date": "2025-11-27",
+    "description": "Systeme de declenchement automatique - Snapshots + Analyse IA + Actions",
+    
+    "PLANIFICATEUR": {
+      "cron_schedules": [
+        {"id": "SNAP_1M", "cron": "*/1 * * * *", "action": "@SNAPSHOT_MEXC"},
+        {"id": "SNAP_5M", "cron": "*/5 * * * *", "action": "@ANALYSE_RAPIDE"},
+        {"id": "SNAP_15M", "cron": "*/15 * * * *", "action": "@ANALYSE_COMPLETE"},
+        {"id": "DAILY", "cron": "0 8 * * *", "action": "@RAPPORT_JOURNALIER"}
+      ]
+    },
+    
+    "SNAPSHOT_MEXC": {
+      "commandes": {
+        "capture_chart": "screenshot --url https://www.mexc.com/exchange/SYMBOL_USDT --output snapshots/SYMBOL_TIMESTAMP.png",
+        "capture_positions": "curl -H 'X-MEXC-APIKEY: KEY' https://api.mexc.com/api/v3/account > positions.json"
+      },
+      "symbols": ["ASTER", "WAVES", "IP", "PROMPT"],
+      "output_folder": "C:/Users/franc/mexc_snapshots/"
+    },
+    
+    "DISTRIBUTION_IA": {
+      "analyse_image": {
+        "ia_principale": "CLAUDE_VISION",
+        "fallback": ["GEMINI_VISION", "GPT4_VISION"],
+        "prompt": "Analyse ce graphique MEXC. Identifie: 1) Tendance 2) Support/Resistance 3) Signaux techniques 4) Risque liquidation"
+      },
+      "analyse_data": {
+        "ia_principale": "QWEN_LOCAL",
+        "endpoint": "http://localhost:1234/v1/chat/completions",
+        "prompt": "Analyse ces positions. Calcule: P&L, distance liquidation, risque global"
+      }
+    },
+    
+    "TRIGGERS": {
+      "ALERTE_CRITIQUE": {
+        "condition": "liquidation_distance < 10%",
+        "actions": ["NOTIFICATION_URGENTE", "SON_ALARME", "EMAIL_ALERTE"]
+      },
+      "ALERTE_WARNING": {
+        "condition": "liquidation_distance < 15%",
+        "actions": ["NOTIFICATION_STANDARD", "LOG_WARNING"]
+      },
+      "SIGNAL_ACHAT": {
+        "condition": "RSI < 30 AND trend_bullish",
+        "actions": ["NOTIFICATION_OPPORTUNITE", "LOG_SIGNAL"]
+      },
+      "SIGNAL_VENTE": {
+        "condition": "RSI > 70 AND trend_bearish",
+        "actions": ["NOTIFICATION_OPPORTUNITE", "LOG_SIGNAL"]
+      }
+    },
+    
+    "COMMANDES_UTILISABLES": {
+      "@SNAP": "Capturer screenshot MEXC maintenant",
+      "@ANALYSE": "Analyser dernier snapshot avec IA",
+      "@POSITIONS": "Recuperer positions actuelles",
+      "@ALERTE": "Verifier conditions d'alerte",
+      "@RAPPORT": "Generer rapport complet",
+      "@START": "Demarrer planificateur",
+      "@STOP": "Arreter planificateur"
+    },
+    
+    "WORKFLOW_COMPLET": {
+      "etapes": [
+        {"1": "PLANIFICATEUR declenche selon cron"},
+        {"2": "SNAPSHOT capture graphique/positions"},
+        {"3": "DISTRIBUTION_IA envoie a IA appropriee"},
+        {"4": "IA analyse et retourne resultat JSON"},
+        {"5": "TRIGGERS verifie conditions"},
+        {"6": "ACTIONS execute si condition vraie"},
+        {"7": "LOG enregistre tout pour historique"}
+      ]
+    },
+    
+    "SCRIPTS_POWERSHELL": {
+      "start_scheduler": "Start-Job -ScriptBlock { while($true) { .\\check_triggers.ps1; Start-Sleep 60 } }",
+      "capture_mexc": "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Screen]::PrimaryScreen | Out-Null; .\\screenshot.exe",
+      "send_to_ia": "curl -X POST http://localhost:1234/v1/chat/completions -H 'Content-Type: application/json' -d @prompt.json"
+    }
+  },
+  
+  "BALISES": {
+    "@TRIGGER": "TRIGGER_AUTOMATION.json",
+    "@SNAP": "SNAPSHOT_MEXC",
+    "@ANALYSE": "DISTRIBUTION_IA",
+    "@ALERTE": "TRIGGERS"
+  },
+  
+  "CONFIG": {"auto_start": false, "log_enabled": true, "notification_enabled": true}
+}
